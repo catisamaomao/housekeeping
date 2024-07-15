@@ -1,12 +1,9 @@
 package org.example.houseKeeping.controllers;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.example.houseKeeping.pojo.*;
-import org.example.houseKeeping.services.AcceptanceService;
-import org.example.houseKeeping.services.NoticeService;
-import org.example.houseKeeping.services.OrderService;
-import org.example.houseKeeping.services.UserService;
-import org.example.houseKeeping.utils.CacheService;
+import org.example.houseKeeping.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +16,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -30,57 +28,46 @@ public class AdminController {
     @Autowired
     private CacheService cacheService;
 
-
     @GetMapping("/getAllUser")
     @ResponseBody
     public Result getAllUser() {
-        // 首先尝试从缓存中获取数据
         String cacheKey = "allUsers";
-        String cachedData = cacheService.getData(cacheKey);
+        List<User> cachedData = cacheService.getData(cacheKey, new TypeReference<List<User>>() {
+        });
+
         if (cachedData != null) {
-            // 如果缓存中有数据，直接返回
             return Result.success(cachedData);
         }
 
-        // 如果缓存中没有数据，从数据库中获取数据
         List<User> list = userService.list();
-
-        // 将数据缓存起来
-        cacheService.cacheData(cacheKey, list.toString()); // 这里假设list.toString()能够正确序列化对象
-
+        cacheService.cacheData(cacheKey, list);
         return Result.success(list);
-        /*List<User> list = userService.list();
-        return Result.success(list);*/
     }
 
     @GetMapping("/getUserByType")
     @ResponseBody
     public Result getUserByType(Integer type) {
-        /*List<User> list = userService.getUserByType(type);
-        return Result.success(list);*/
         String cacheKey = "userType:" + type;
-        String cachedData = cacheService.getData(cacheKey);
+        List<User> cachedData = cacheService.getData(cacheKey, new TypeReference<List<User>>() {
+        });
+
         if (cachedData != null) {
             return Result.success(cachedData);
         }
 
         List<User> list = userService.getUserByType(type);
-        cacheService.cacheData(cacheKey, list.toString());
+        cacheService.cacheData(cacheKey, list);
         return Result.success(list);
     }
 
     @DeleteMapping("/deleteUser")
     @ResponseBody
     public Result deleteUser(@RequestParam Integer userId) {
-
         try {
             userService.removeById(userId);
             orderService.remove(new LambdaQueryWrapper<Order>().eq(Order::getUserId, userId));
             acceptanceService.remove(new LambdaQueryWrapper<Acceptance>().eq(Acceptance::getUserId, userId));
-
-            // 删除用户后，清理缓存
-            cacheService.cacheData("allUsers", null); // 清空缓存
-
+            cacheService.cacheData("allUsers", null);
             return Result.success();
         } catch (Exception e) {
             return Result.error("删除失败" + e.getMessage());
@@ -94,7 +81,6 @@ public class AdminController {
                 .like(User::getUserName, "%" + username + "%"));
         return Result.success(list);
     }
-
 
     @PostMapping("/addUser")
     @ResponseBody
@@ -136,7 +122,6 @@ public class AdminController {
             return Result.error("修改状态失败：" + e.getMessage());
         }
     }
-
 
     @GetMapping("/getAllNotice")
     @ResponseBody

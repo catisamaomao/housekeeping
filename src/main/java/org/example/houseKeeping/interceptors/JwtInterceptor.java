@@ -1,3 +1,4 @@
+/*
 package org.example.houseKeeping.interceptors;
 
 import org.example.houseKeeping.utils.JwtUtils;
@@ -21,6 +22,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         // 从请求头中获取令牌
         String token = request.getHeader("Authorization");
         if (token == null || token.isEmpty()) {
+            System.out.println("SSSSSSSS");
             // 如果令牌为空，则返回未提供令牌的错误消息
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "未提供令牌");
             return false;
@@ -38,3 +40,4 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
     }
 }
+*/
