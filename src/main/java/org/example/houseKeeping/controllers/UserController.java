@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.example.houseKeeping.pojo.Order;
 import org.example.houseKeeping.pojo.Result;
 import org.example.houseKeeping.pojo.User;
+import org.example.houseKeeping.services.CacheService;
 import org.example.houseKeeping.services.OrderService;
 import org.example.houseKeeping.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private CacheService cacheService;
 
 
     @PostMapping("/login")
@@ -31,6 +34,7 @@ public class UserController {
     @ResponseBody
     public Result register(@RequestBody User user) {
         userService.save(user);
+        cacheService.cacheData("allUsers", null);
         return Result.success();
     }
 
