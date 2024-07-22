@@ -1,5 +1,8 @@
+/*
 package org.example.houseKeeping.interceptors;
 
+import org.example.houseKeeping.exception.TokenExpiredException;
+import org.example.houseKeeping.exception.TokenNotProvidedException;
 import org.example.houseKeeping.utils.JwtUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -18,14 +21,14 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             System.out.println("Method:OPTIONS");
             return true;
         }
 
         String token = request.getHeader("Authorization");
         if (token == null || token.isEmpty()) {
-            throw new IllegalStateException("未提供令牌");
+            throw new TokenNotProvidedException("未提供令牌");
         }
 
         try {
@@ -33,7 +36,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             JwtUtils.validateJwt(token);
             return true;
         } catch (Exception e) {
-            throw new IllegalStateException("令牌验证失败");
+            throw new TokenExpiredException("令牌验证失败");
         }
     }
 }
+*/
