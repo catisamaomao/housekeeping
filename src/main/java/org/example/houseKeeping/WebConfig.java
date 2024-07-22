@@ -1,4 +1,3 @@
-/*
 package org.example.houseKeeping;
 
 import org.example.houseKeeping.interceptors.JwtInterceptor;
@@ -13,4 +12,4 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new JwtInterceptor());
     }
 }
-*/
+

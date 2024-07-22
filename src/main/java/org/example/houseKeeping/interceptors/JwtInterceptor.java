@@ -1,4 +1,3 @@
-/*
 package org.example.houseKeeping.interceptors;
 
 import org.example.houseKeeping.exception.TokenExpiredException;
@@ -40,4 +39,3 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
     }
 }
-*/
