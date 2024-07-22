@@ -60,6 +60,12 @@ public class AdminController {
         return Result.success(list);
     }
 
+    @GetMapping("/getUserByUserId")
+    @ResponseBody
+    public Result getUserByUserId(@RequestParam("userId") Long userId) {
+        return Result.success(userService.getById(userId));
+    }
+
     @DeleteMapping("/deleteUser")
     @ResponseBody
     public Result deleteUser(@RequestParam Integer userId) {
@@ -246,7 +252,8 @@ public class AdminController {
                 return Result.error("订单不存在");
             }
             order.setState(0); // 取消接单
-            order.setReceiverId(null);
+            //order.setReceiverId(null);
+            order.setReceiverId(0);
             orderService.updateById(order);
             return Result.success();
         } catch (Exception e) {
@@ -286,11 +293,11 @@ public class AdminController {
                 .eq(Order::getReceiverId, receiverId)
                 .eq(Order::getState, 3));
 
-        HashMap<Date, Double> map = new HashMap<>();
-        list.forEach((Order order) ->
-                map.put(order.getEndTime(), order.getPrice()));
+//        HashMap<Date, Double> map = new HashMap<>();
+//        list.forEach((Order order) ->
+//                map.put(order.getEndTime(), order.getPrice()));
 
-        return Result.success(map);
+        return Result.success(list);
     }
 
 }

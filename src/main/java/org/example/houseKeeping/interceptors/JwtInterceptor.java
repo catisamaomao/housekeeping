@@ -10,9 +10,16 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         String requestURI = request.getRequestURI();
 
+
         if (requestURI.contains("/login")) {
+            return true;
+        }
+
+        if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            System.out.println("Method:OPTIONS");
             return true;
         }
 
