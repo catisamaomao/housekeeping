@@ -1,6 +1,7 @@
 package org.example.houseKeeping.controllers;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.example.houseKeeping.pojo.*;
 import org.example.houseKeeping.services.*;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -251,10 +251,11 @@ public class AdminController {
             if (order == null) {
                 return Result.error("订单不存在");
             }
-            order.setState(0); // 取消接单
-            //order.setReceiverId(null);
-            order.setReceiverId(0);
-            orderService.updateById(order);
+            LambdaUpdateWrapper updateWrapper = new LambdaUpdateWrapper<Order>()
+                    .set(Order::getState, 0)
+                    .set(Order::getReceiverId, null)
+                    .eq(Order::getOrderId, payload.get("orderId"));
+            orderService.update(updateWrapper);
             return Result.success();
         } catch (Exception e) {
             return Result.error("取消接单失败：" + e.getMessage());
