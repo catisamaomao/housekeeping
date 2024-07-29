@@ -199,6 +199,7 @@ public class AdminController {
             Acceptance acceptance = acceptanceService.getById(pload.get("id"));
             User user = userService.getById(acceptance.getUserId());
             user.setState(0);
+            user.setRole(1);
             userService.updateById(user);
             if (acceptance == null) {
                 return Result.error("应聘申请不存在");

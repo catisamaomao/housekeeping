@@ -41,15 +41,17 @@ public class UserController {
         if (user.getRole() == 1) {
             user.setRole(3);
             user.setState(1);
-            userService.update(user, new LambdaUpdateWrapper<>() {
-            });
+            userService.save(user);
 
             Acceptance acceptance = new Acceptance();
             acceptance.setUserId(user.getUserId());
             acceptance.setContent("申请成为工作人员");
+            System.out.println("测试01----->"+acceptance);
             acceptanceService.save(acceptance);
+        }else {
+            userService.save(user);
         }
-        userService.save(user);
+
         cacheService.cacheData("allUsers", null);
         return Result.success();
     }
