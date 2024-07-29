@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/worker")
 public class OrderController {
-    @Value("${image.path}")
+    @Value("src/main/resources/image")
     private String basePath;
     @Autowired
     private OrderService orderService;
@@ -47,7 +47,7 @@ public class OrderController {
         String originalFilename = file.getOriginalFilename();
         String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
         //判断文件基址,不存在就创建
-       /* File baseFile = new File(basePath);
+        /*File baseFile = new File(basePath);
         if (!baseFile.exists()) {
             baseFile.mkdirs();
         }*/
