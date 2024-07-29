@@ -1,9 +1,12 @@
 package org.example.houseKeeping.controllers;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import org.example.houseKeeping.pojo.Acceptance;
 import org.example.houseKeeping.pojo.Order;
 import org.example.houseKeeping.pojo.Result;
 import org.example.houseKeeping.pojo.User;
+import org.example.houseKeeping.services.AcceptanceService;
 import org.example.houseKeeping.services.CacheService;
 import org.example.houseKeeping.services.OrderService;
 import org.example.houseKeeping.services.UserService;
@@ -22,6 +25,8 @@ public class UserController {
     private OrderService orderService;
     @Autowired
     private CacheService cacheService;
+    @Autowired
+    private AcceptanceService acceptanceService;
 
 
     @PostMapping("/login")
@@ -33,6 +38,17 @@ public class UserController {
     @PostMapping("/register")
     @ResponseBody
     public Result register(@RequestBody User user) {
+        if (user.getRole() == 1) {
+            user.setRole(3);
+            user.setState(1);
+            userService.update(user, new LambdaUpdateWrapper<>() {
+            });
+
+            Acceptance acceptance = new Acceptance();
+            acceptance.setUserId(user.getUserId());
+            acceptance.setContent("申请成为工作人员");
+            acceptanceService.save(acceptance);
+        }
         userService.save(user);
         cacheService.cacheData("allUsers", null);
         return Result.success();

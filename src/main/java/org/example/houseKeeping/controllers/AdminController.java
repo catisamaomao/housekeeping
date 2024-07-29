@@ -197,14 +197,17 @@ public class AdminController {
     public Result dealAcceptance(@RequestBody Map<String, String> pload) {
         try {
             Acceptance acceptance = acceptanceService.getById(pload.get("id"));
+            User user = userService.getById(acceptance.getUserId());
+            user.setState(0);
+            userService.updateById(user);
             if (acceptance == null) {
-                return Result.error("接单申请不存在");
+                return Result.error("应聘申请不存在");
             }
             acceptance.setAgree(Integer.parseInt(pload.get("agree")));
             acceptanceService.updateById(acceptance);
             return Result.success();
         } catch (Exception e) {
-            return Result.error("处理接单申请失败：" + e.getMessage());
+            return Result.error("处理应聘申请失败：" + e.getMessage());
         }
     }
 
