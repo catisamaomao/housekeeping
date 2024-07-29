@@ -38,4 +38,12 @@ public class GlobalExceptionHandler {
         logger.severe("An error occurred: " + ex.getMessage());
         return Result.error("内部服务器错误");
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public Result BusException(HttpServletRequest request, Exception ex) {
+        logger.severe("An error occurred: " + ex.getMessage());
+        return Result.error("文件上传错误");
+    }
 }
