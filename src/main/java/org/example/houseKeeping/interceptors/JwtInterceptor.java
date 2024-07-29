@@ -16,7 +16,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
 
 
-        if (requestURI.contains("/login")) {
+        if (requestURI.contains("/login") || requestURI.contains("register")) {
             return true;
         }
 
